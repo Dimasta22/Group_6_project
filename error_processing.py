@@ -11,6 +11,8 @@ def input_error(func):
         except StopIteration:
             return "Столько контактов нет"
         except ValueError:
-            return 'Введите все параметры'
+            return 'Вы ввели неверные данные'
+        except AttributeError:
+            return 'Это не номер'
         return result
     return inner

@@ -13,7 +13,6 @@ def handler(sentence):
 
     elif parser(sentence) == 'create':
         _, name, *args = sentence.split(' ')
-        name = Name(name)
         if len(args) == 1:
             number = args[0]
             record = Record(Name(name), Phone(number))
@@ -22,8 +21,12 @@ def handler(sentence):
             record = Record(Name(name), Phone(number), Birthday(date))
         else:
             record = Record(Name(name))
+        for contact in CONTACTS:
+            if contact == name:
+                return 'Такой пользователь уже есть'
+            #CONTACTS[name.value].add_phone(phone)
         CONTACTS.add_record(record)
-        return f"Пользователь {name.value} создан"
+        return 'Пользователь добавлен'
 
     # Мишь тут добавь выполнение добавления номера для уже существующего контакта
 
@@ -34,31 +37,12 @@ def handler(sentence):
         new_phone = Phone(new_phone)
         for key in CONTACTS:
             if key == name.value:
-                CONTACTS[key].change_phone(old_phone, new_phone)
-                return "Номер изменен"
+                if CONTACTS[key].change_phone(old_phone, new_phone):
+                    return "Номер изменен"
+                else:
+                    return "Такого номера нет"
+                #CONTACTS[key].change_phone(old_phone, new_phone)
         return "Такого пользователя не найдено"
-
-    elif parser(sentence) == 'show all':
-        str_ = ''
-        if CONTACTS == {}:
-            return "Список пустой"
-        else:
-            for key, value in CONTACTS.items():
-                try:
-                    str2 = ''
-                    for phone in value.phones:
-                        str2 += phone.value + ' '
-                    str_ += str(value.name.value) + " : " + \
-                            str(str2) + ' ' # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
-                except AttributeError:
-                    str_ += str(value.name.value) + " : " + str(value.phones) + ' '
-                try:
-                    str_ += 'birthday: ' + \
-                            value.birthday.value.strftime('%d/%m/%Y') + '\n'
-                except:
-                    str_ += '\n'
-                    continue
-            return str_[:-1]
 
     elif parser(sentence) == 'delete':
         _, name, phone_to_delete, *args = sentence.split(' ')
@@ -66,8 +50,10 @@ def handler(sentence):
         phone_to_delete = Phone(phone_to_delete)
         for key in CONTACTS:
             if key == name.value:
-                CONTACTS[key].delete(phone_to_delete)
-                return "Номер удален"
+                if CONTACTS[key].delete(phone_to_delete):
+                    return "Номер удален"
+                else:
+                    return "Такого номера нет"
         return "Такого пользователя или номера не найдено"
 
     elif parser(sentence) == 'phone':
@@ -109,6 +95,27 @@ def handler(sentence):
                     break
         return str_[:-1]
 
+    elif parser(sentence) == 'show all':
+        str_ = ''
+        if CONTACTS == {}:
+            return "Список пустой"
+        else:
+            for key, value in CONTACTS.items():
+                try:
+                    str2 = ''
+                    for phone in value.phones:
+                        str2 += phone.value + ' '
+                    str_ += str(value.name.value) + " : " + str(str2) + ' '
+                    # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
+                except AttributeError:
+                    str_ += str(value.name.value) + " : " + str(value.phones) + ' '
+                try:
+                    str_ += 'birthday: ' + value.birthday.value.strftime('%d.%m.%Y') + '\n'
+                except:
+                    str_ += '\n'
+                    continue
+            return str_[:-1]
+
     elif parser(sentence) == 'file':
         _, flag, *args = sentence.split(' ')
         # Тут будет запись и считывание файла
@@ -123,11 +130,12 @@ def handler(sentence):
             return "Список пустой"
         else:
             for key, value in CONTACTS.items():
+                flag = 0
                 for phone in value.phones:
                     if find_it in phone.value:
                         flag = 1
                 try:
-                    if find_it in value.birthday.value.strftime('%d/%m/%Y'):
+                    if find_it in value.birthday.value.strftime('%d.%m.%Y'):
                         flag = 1
                 except:
                     pass
@@ -140,11 +148,11 @@ def handler(sentence):
                     except AttributeError:
                         str_ += str(value.name.value) + " : " + str(value.phones) + ' '
                     try:
-                        str_ += 'birthday: ' + value.birthday.value.strftime('%d/%m/%Y') + '\n'
+                        str_ += 'birthday: ' + value.birthday.value.strftime('%d.%m.%Y') + '\n'
                     except:
                         str_ += '\n'
                         continue
-                flag = 0
+
         return str_[:-1]
 
     elif parser(sentence) is None:

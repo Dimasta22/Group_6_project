@@ -1,9 +1,7 @@
 from datetime import datetime
 from error_processing import input_error
 from collections import UserDict
-import shelve
 from itertools import islice
-#from handler import new_contact
 
 
 class Field:
@@ -12,7 +10,8 @@ class Field:
 
 
 class Name(Field):
-    pass
+    def __init__(self, value) -> None:
+        super().__init__(value)
 
 
 @ input_error
@@ -28,12 +27,11 @@ class Phone(Field):
 
     @value.setter
     def value(self, value: str):
-        self.__value = (value.strip()
-                        .replace('+', '')
-                        .replace('(', '')
-                        .replace(')', '')
-                        .replace('-', '')
-                        .replace(' ', ''))[: 12]
+        value = value.strip()
+        for ch in value:
+            if ch not in "0123456789()-+":
+                raise ValueError("Invalid phone number")
+        self.__value = value
 
 
 class Birthday(Field):
@@ -50,7 +48,7 @@ class Birthday(Field):
     def value(self, b_value):
         if b_value:
             try:
-                b_value = datetime.strptime(b_value, '%d/%m/%Y')
+                b_value = datetime.strptime(b_value, '%d.%m.%Y')
             except ValueError:
                 raise ValueError("Invalid birthday")
         self.__value = b_value
