@@ -43,6 +43,12 @@ def parser_job(sentence):
             return func.group()
 
 
+def arg(sentence):
+     _, name, old_phone, new_phone, *args = sentence.split(' ')
+     return args
+
+
 if __name__ == '__main__':
-    sen = 'show all delete Dima 167 050 789 87joi odi'
+    sen = 'show Dima 167 050 789 87joi odi'
     print(parser(sen))
+    print(arg(sen))
