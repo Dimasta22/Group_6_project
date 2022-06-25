@@ -1,7 +1,7 @@
 def input_error(func):
-    def inner(*args, **kwargs):
+    def inner(sentence: str):
         try:
-            result = func(*args, **kwargs)
+            result = func(sentence)
         except IndexError:
             return "Вы ввели не полные данные"
         except TypeError:
@@ -13,5 +13,4 @@ def input_error(func):
         except ValueError:
             return 'Введите все параметры'
         return result
-
     return inner

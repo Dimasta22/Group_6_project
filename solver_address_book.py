@@ -3,33 +3,44 @@ from error_processing import input_error
 from collections import UserDict
 import shelve
 from itertools import islice
-from handler import new_contact
+#from handler import new_contact
 
 
 class Field:
     def __init__(self, value) -> None:
-        self.__value = None
         self.value = value
 
 
 class Name(Field):
-    # name = ''
+    pass
+
+
+@ input_error
+class Phone(Field):
+    def __init__(self, value) -> None:
+        super().__init__(value)
+        self.__value = None
+        self.value = value
+
     @property
-    def value(self):
+    def value(self) -> str:
         return self.__value
 
     @value.setter
-    def value(self, value):
-        if value and type(value) is str:
-            self.__value = value
-        else:
-            raise ValueError('Invalid name')
+    def value(self, value: str):
+        self.__value = (value.strip()
+                        .replace('+', '')
+                        .replace('(', '')
+                        .replace(')', '')
+                        .replace('-', '')
+                        .replace(' ', ''))[: 12]
 
 
 class Birthday(Field):
-    # name = ''
-    # def __init__(self, birthday) -> None:
-    #     self.birthday = datetime.strptime(birthday, '%d/%m/%Y')
+    def __init__(self, value) -> None:
+        super().__init__(value)
+        self.__value = None
+        self.value = value
 
     @property
     def value(self):
@@ -43,23 +54,6 @@ class Birthday(Field):
             except ValueError:
                 raise ValueError("Invalid birthday")
         self.__value = b_value
-
-
-@ input_error
-class Phone(Field):
-    # def __init__(self, phone=None) -> None:
-    #     self.phone = phone
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, n_value):
-        n_value = n_value.strip()
-        for ch in n_value:
-            if ch not in "0123456789()-+":
-                raise ValueError("Invalid phone number")
-        self.__value = n_value
 
 
 class Record:
@@ -82,7 +76,7 @@ class Record:
             difference = bd_in_year-today
         return difference.days
 
-    def change2_phone(self, phone: Phone, new_phone: Phone) -> bool:
+    def change_phone(self, phone: Phone, new_phone: Phone) -> bool:
         for p in self.phones:
             if phone.value == p.value:
                 self.delete(phone)
@@ -116,29 +110,6 @@ class AddressBook(UserDict):
     filename = 'contacts'
     save_str = ''
 
-    def write(self):
-        # запись
-        with shelve.open(self.filename) as states:
-            for k, v in self.data.items():
-                print(k)
-                self.save_str += k + ','
-                for p in v.phones:
-                    self.save_str += p.value + ','
-                try:
-                    self.save_str += v.birthday.value.strftime('%d/%m/%Y')+','
-                except:
-                    self.save_str += ''
-                states[k] = self.save_str[:-1]
-                self.save_str = ''
-
-    def read(self):
-        # чтение
-        with shelve.open(self.filename) as states:
-            for key in states:
-                value = states[key].split(',')
-                # value = (value,)
-                new_contact(value)
-
     def add_record(self, rec):
         self.data[rec.name.value] = rec
 
@@ -161,7 +132,6 @@ class AddressBook(UserDict):
             self.current_amount += 1
             return str_[:-1]
         raise StopIteration
-
 
 
 if __name__ == '__main__':
