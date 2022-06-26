@@ -37,6 +37,7 @@ def handler(sentence):
                     return "Номер добавлен"
                 else:
                     return "Такой номер уже есть"
+        return "Такого пользователя нет, чтобы добавить ему номер"
 
     elif parser(sentence) == 'change':
         _, name, old_phone, new_phone, *args = sentence.split(' ')
