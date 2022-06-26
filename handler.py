@@ -24,11 +24,20 @@ def handler(sentence):
         for contact in CONTACTS:
             if contact == name:
                 return 'Такой пользователь уже есть'
-            #CONTACTS[name.value].add_phone(phone)
+            # CONTACTS[name.value].add_phone(phone)
         CONTACTS.add_record(record)
         return 'Пользователь добавлен'
 
-    # Мишь тут добавь выполнение добавления номера для уже существующего контакта
+    elif parser(sentence) == 'add':
+        _, name, phone, *args = sentence.split(' ')
+        phone = Phone(phone)
+        for k, v in CONTACTS.items():
+            if k == name:
+                if CONTACTS[k].add_phone(phone):
+                    return "Номер добавлен"
+                else:
+                    return "Такой номер уже есть"
+        return "Такого пользователя нет, чтобы добавить ему номер"
 
     elif parser(sentence) == 'change':
         _, name, old_phone, new_phone, *args = sentence.split(' ')
@@ -108,9 +117,11 @@ def handler(sentence):
                     str_ += str(value.name.value) + " : " + str(str2) + ' '
                     # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
                 except AttributeError:
-                    str_ += str(value.name.value) + " : " + str(value.phones) + ' '
+                    str_ += str(value.name.value) + " : " + \
+                        str(value.phones) + ' '
                 try:
-                    str_ += 'birthday: ' + value.birthday.value.strftime('%d.%m.%Y') + '\n'
+                    str_ += 'birthday: ' + \
+                        value.birthday.value.strftime('%d.%m.%Y') + '\n'
                 except:
                     str_ += '\n'
                     continue
@@ -146,9 +157,11 @@ def handler(sentence):
                             str2 += phone.value + ' '
                         str_ += str(value.name.value) + " : " + str(str2) + ' '
                     except AttributeError:
-                        str_ += str(value.name.value) + " : " + str(value.phones) + ' '
+                        str_ += str(value.name.value) + " : " + \
+                            str(value.phones) + ' '
                     try:
-                        str_ += 'birthday: ' + value.birthday.value.strftime('%d.%m.%Y') + '\n'
+                        str_ += 'birthday: ' + \
+                            value.birthday.value.strftime('%d.%m.%Y') + '\n'
                     except:
                         str_ += '\n'
                         continue
@@ -162,6 +175,3 @@ def handler(sentence):
 if __name__ == '__main__':
     sen = 'find delete Dima 167 050 789 87joi odi'
     print(handler(sen))
-
-
-
