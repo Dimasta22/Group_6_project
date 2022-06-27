@@ -2,7 +2,7 @@ from error_processing import input_error
 from solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
 from parser import parser
 import re
-
+import os
 
 CONTACTS = AddressBook()
 
@@ -182,6 +182,9 @@ def handler(sentence):
         _, flag, *args = sentence.split(' ')
         if flag == 'write':
             # сохраняем нашу книгу контактов
+            os.remove('contacts.dir')
+            os.remove('contacts.dat')
+            os.remove('contacts.bak')
             CONTACTS.write()
             return 'Книга контактов сохранена'
         elif flag == 'read':
@@ -190,7 +193,13 @@ def handler(sentence):
             for contact in contacts_in_str:
                 create_contact(contact)
             return 'Книга контактов загружена'
-
+    elif parser(sentence) == 'remove':
+        _, key, *args = sentence.split(' ')
+        try:
+            CONTACTS.pop(key)
+        except:
+            return 'Такого контакта нет в адресной книге'
+        return f'Контакт {key} удален из адресной книги'
     elif parser(sentence) == 'find':
         _, find_it, *args = sentence.split(' ')
         if find_it == ' ':

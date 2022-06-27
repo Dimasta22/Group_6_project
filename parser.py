@@ -15,7 +15,8 @@ COMMANDS_ADDRESSBOOK = [
     'exit',
     'close',
     'good bye',
-    'file'
+    'file',
+    'remove'
 ]
 
 COMMANDS_NOTEBOOK = [
