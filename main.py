@@ -1,23 +1,36 @@
 from handler_address_book import handler
-from parser import parser
+from parser import parser, parser_notebook
 
 
 def main():
-    job = int(input(
-        'Выбирете с чем работаем: addressbook (введите: 1), notebook (введите: 2): \n>>> '))
+    while True:
+        job = input('Выбирете с чем работаем: addressbook (введите: 1), notebook (введите: 2),'
+                    'сортировка файлов в папке (введите: 3): \n>>> ')
 
-    if job == 1:
-        while True:
-            command = input('Введите название комманды и параметры: ')
-            if parser(command) in ['exit', 'close', 'good bye']:
-                print('До новых встреч')
-                break
-            print(handler(command))
+        if job == '1':
+            while True:
+                command = input('Введите название комманды и параметры: ')
+                if parser(command) in ['exit', 'close', 'good bye']:
+                    print('До новых встреч')
+                    break
+                print(handler.handler(command))
+            break
 
-    if job == 2:
-        # Тут будет ноутбук
-        pass
+        elif job == '2':
+            while True:
+                command = input('Введите название комманды и параметры: ')
+                if parser_notebook(command) in ['exit', 'close', 'good bye']:
+                    print('До новых встреч')
+                    break
+                print(handler_solver.handler(command))
+            break
 
+        elif job == '3':
+            # Тут будет сортировка файлов
+            break
+
+        else:
+            print('Введите команду из предложеных')
 
 if __name__ == "__main__":
     main()
