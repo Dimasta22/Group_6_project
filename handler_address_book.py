@@ -182,9 +182,12 @@ def handler(sentence):
         _, flag, *args = sentence.split(' ')
         if flag == 'write':
             # сохраняем нашу книгу контактов
-            os.remove('contacts.dir')
-            os.remove('contacts.dat')
-            os.remove('contacts.bak')
+            try:
+                os.remove('contacts.dir')
+                os.remove('contacts.dat')
+                os.remove('contacts.bak')
+            except:
+                pass
             CONTACTS.write()
             return 'Книга контактов сохранена'
         elif flag == 'read':
@@ -205,7 +208,6 @@ def handler(sentence):
         if find_it == ' ':
             return 'Введите данные для поиска'
         str_ = ''
-        flag = 0
         if CONTACTS == {}:
             return "Список пустой"
         else:
