@@ -38,26 +38,21 @@ class Record:
                                        self.note,
                                        ", ".join([tag.value for tag in self.tags]))
 
-    def add_tag(self, tag: Tag) -> None:
-        self.tags.append(tag)
-
-    def delete_tag(self, tag: Tag) -> None:
-        self.tags.remove(tag)
-
-    def change_tag(self, tag: Tag, new_tag: Tag) -> None:
-        self.tags.remove(tag)
-        self.tags.append(new_tag)
-
 
 class Notebook(UserDict):
     def add_record(self, record: Record) -> None:
-        '''
-        self.data.update({'title': record.title.value, 'note': record.note.value,
-                          'tags': [", ".join([tag.value for tag in record.tags])]})
+        if record.tags:
+            self.data.update({'title': record.title.value, 'note': record.note.value,
+                              'tags': [", ".join([tag.value for tag in record.tags])]})
+        else:
+            self.data.update({'title': record.title.value, 'note': record.note.value})
+
+
         '''
         self.data['title'] = record.title.value
         self.data['note'] = record.note.value
         self.data['tags'] = [", ".join([tag.value for tag in record.tags])]
+        '''
 
 
 if __name__ == "__main__":
