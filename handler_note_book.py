@@ -2,6 +2,7 @@ from solver_note_book import Notebook, Record, Title, Note, Tag
 from parser import parser_notebook
 import pickle
 from error_processing import input_error
+import re
 
 all_notes = Notebook()
 notes = []
@@ -17,6 +18,7 @@ def handler(sentence):
         record = Record(title, note)
         all_notes.add_record(record)
         notes.append(all_notes.copy())
+        return 'Запись добавлена'
 
     elif parser_notebook(sentence) == 'file':
         _, what, *text = sentence.split(' ')
@@ -34,8 +36,14 @@ def handler(sentence):
             return 'Выберите или read или write'
 
     elif parser_notebook(sentence) == 'find':
+        _, *text = sentence.split(' ')
+        text = ' '.join([word for word in text])
         for note in notes:
-            pass
+            for value in note.values():
+                if re.findall(fr'{text}', f'{value}'):
+                    print(f'{note}')
+                    break
+        return 'Нашлись эти записи'
 
 
 if __name__ == '__main__':
@@ -45,5 +53,7 @@ if __name__ == '__main__':
     print(handler(sen))
     print(notes)
     sen = 'file'
+    print(handler(sen))
+    sen = 'find ang'
     print(handler(sen))
 
