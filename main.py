@@ -1,9 +1,10 @@
-from handler import handler
+from handler_address_book import handler
 from parser import parser
 
 
 def main():
-    job = int(input('Выбирете с чем работаем: addressbook (введите: 1), notebook (введите: 2): \n>>> '))
+    job = int(input(
+        'Выбирете с чем работаем: addressbook (введите: 1), notebook (введите: 2): \n>>> '))
 
     if job == 1:
         while True:
@@ -14,7 +15,7 @@ def main():
             print(handler(command))
 
     if job == 2:
-        #Тут будет ноутбук
+        # Тут будет ноутбук
         pass
 
 

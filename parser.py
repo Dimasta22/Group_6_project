@@ -14,7 +14,9 @@ COMMANDS_ADDRESSBOOK = [
     'find',
     'exit',
     'close',
-    'good bye'
+    'good bye',
+    'file',
+    'remove'
 ]
 
 COMMANDS_NOTEBOOK = [
@@ -44,8 +46,8 @@ def parser_job(sentence):
 
 
 def arg(sentence):
-     _, name, old_phone, new_phone, *args = sentence.split(' ')
-     return args
+    _, name, old_phone, new_phone, *args = sentence.split(' ')
+    return args
 
 
 if __name__ == '__main__':
