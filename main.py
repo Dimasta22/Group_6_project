@@ -22,7 +22,7 @@ def main():
                 if parser_notebook(command) in ['exit', 'close', 'good bye']:
                     print('До новых встреч')
                     break
-                print(handler_solver.handler(command))
+                #print(handler_solver.handler(command))
             break
 
         elif job == '3':
