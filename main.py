@@ -1,4 +1,4 @@
-from handler_address_book import handler
+import handler_address_book
 from parser import parser, parser_notebook
 
 
@@ -13,7 +13,7 @@ def main():
                 if parser(command) in ['exit', 'close', 'good bye']:
                     print('До новых встреч')
                     break
-                print(handler.handler(command))
+                print(handler_address_book.handler(command))
             break
 
         elif job == '2':
