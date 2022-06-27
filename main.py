@@ -13,7 +13,7 @@ def main():
                 if parser(command) in ['exit', 'close', 'good bye']:
                     print('До новых встреч')
                     break
-                print(handler.handler(command))
+                print(handler(command))
             break
 
         elif job == '2':
@@ -31,6 +31,7 @@ def main():
 
         else:
             print('Введите команду из предложеных')
+
 
 if __name__ == "__main__":
     main()
