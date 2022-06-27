@@ -214,8 +214,15 @@ class AddressBook(UserDict):
         with shelve.open(self.filename) as states:
             for k, v in self.data.items():
                 self.save_str += k + ','
-                for p in v.phones:
-                    self.save_str += p.value + ','
+                if v.phones:
+                    for p in v.phones:
+                        self.save_str += p.value + ','
+                if v.emails:
+                    for email in v.emails:
+                        self.save_str += email.value + ','
+                if v.addresses:
+                    for address in v.addresses:
+                        self.save_str += address.value + ','
                 try:
                     self.save_str += v.birthday.value.strftime('%d.%m.%Y')+','
                 except:
