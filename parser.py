@@ -25,6 +25,7 @@ COMMANDS_NOTEBOOK = [
     'sort',
     'find',
     'file',
+    'remove',
     'exit',
     'close',
     'good bye'

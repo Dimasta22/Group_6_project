@@ -45,6 +45,15 @@ def handler(sentence):
                     break
         return 'Нашлись эти записи'
 
+    elif parser_notebook(sentence) == 'remove':
+        _, title, *args = sentence.split(' ')
+        print(title)
+        for note in notes:
+            print(f'{note["title"]}: {title}')
+            if note['title'] == title:
+                notes.remove(note)
+        return notes
+
 
 if __name__ == '__main__':
     sen = 'create Gang This is game.'
@@ -56,4 +65,7 @@ if __name__ == '__main__':
     print(handler(sen))
     sen = 'find ang'
     print(handler(sen))
+    sen = 'remove Gang'
+    print(handler(sen))
+
 
