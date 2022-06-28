@@ -41,6 +41,9 @@ class Record:
     def add_tag(self, tag: Tag) -> None:
         self.tags.append(tag)
 
+    def delete_tag(self, tag: Tag) -> None:
+        self.tags.remove(tag)
+
 
 class Notebook(UserDict):
     def add_record(self, record: Record) -> None:
@@ -68,5 +71,11 @@ if __name__ == "__main__":
     print(record1)
     print(all_notes)
     all_notes['tags'].append('ss')
+    #print(all_notes['tags'])
+    #all_notes['tags'].add_tag(Tag('yu'))
+    print(all_notes['title'])
+    print(all_notes['note'])
     print(all_notes['tags'])
-    all_notes['tags'].add_tag(Tag('yu'))
+    record1.add_tag(Tag('aaa'))
+    print(record1)
+    #print(Record(all_notes['title'], all_notes['note'], all_notes['tags']))
