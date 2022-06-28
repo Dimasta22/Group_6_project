@@ -11,6 +11,7 @@ COMMANDS_ADDRESSBOOK = [
     'delete',
     'birthday',
     'show',
+    'file',
     'find',
     'exit',
     'close',

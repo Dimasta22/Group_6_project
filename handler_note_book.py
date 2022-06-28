@@ -12,7 +12,6 @@ notes = []
 def handler(sentence):
     if parser_notebook(sentence) == 'create':
         _, name, *text = sentence.split(' ')
-
         title = Title(name)
         note = Note(" ".join([word for word in text]))
         record = Record(title, note)
@@ -41,18 +40,51 @@ def handler(sentence):
         for note in notes:
             for value in note.values():
                 if re.findall(fr'{text}', f'{value}'):
-                    print(f'{note}')
+
+                    #print(f'{note}')
                     break
         return 'Нашлись эти записи'
 
     elif parser_notebook(sentence) == 'remove':
         _, title, *args = sentence.split(' ')
-        print(title)
         for note in notes:
-            print(f'{note["title"]}: {title}')
             if note['title'] == title:
                 notes.remove(note)
         return notes
+
+    elif parser_notebook(sentence) == 'change':
+        _, command, title, *args = sentence.split(' ')
+        args = ' '.join([word for word in args])
+
+        for note in notes:
+            if command == 'title':
+                if note['title'] == title:
+                    note['note'] = args
+
+            elif command == 'tag':
+                old_tag, new_tag, *args = args.split(' ')
+                if note.get('tags', None):
+                    for tag in note.get('tags', None):
+                        if tag == old_tag:
+                            note['tags'].remove(old_tag)
+                            note['tags'].append(new_tag)
+
+    elif parser_notebook(sentence) == 'add':
+        _, title, tag, *args = sentence.split(' ')
+        for note in notes:
+            if note.get('tags', None):
+                note['tags'].append(tag)
+            else:
+                record = Record(Title(note['title']), Note(note['note']), Tag(tag))
+                notes.remove(note)
+                all_notes.add_record(record)
+                notes.append(all_notes.copy())
+
+    elif parser_notebook(sentence) == 'sort':
+        _, title, *args = sentence.split(' ')
+        for note in notes:
+            if note['title'] == title:
+                note['tags'] = sorted(note['tags'])
 
 
 if __name__ == '__main__':
@@ -67,5 +99,21 @@ if __name__ == '__main__':
     print(handler(sen))
     sen = 'remove Gang'
     print(handler(sen))
+    sen = 'change title Band zuzu lilu baka'
+    print(handler(sen))
+    print(notes)
+    sen = 'add Band Africa'
+    print(handler(sen))
+    print(notes)
+    sen = 'change tag Band Africa Ukraine'
+    print(handler(sen))
+    print(notes)
+    sen = 'add Band Africa'
+    print(handler(sen))
+    print(notes)
+    sen = 'sort Band Africa'
+    print(handler(sen))
+    print(notes)
+
 
 

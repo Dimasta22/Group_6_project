@@ -38,6 +38,9 @@ class Record:
                                        self.note,
                                        ", ".join([tag.value for tag in self.tags]))
 
+    def add_tag(self, tag: Tag) -> None:
+        self.tags.append(tag)
+
 
 class Notebook(UserDict):
     def add_record(self, record: Record) -> None:
@@ -46,7 +49,6 @@ class Notebook(UserDict):
                               'tags': [", ".join([tag.value for tag in record.tags])]})
         else:
             self.data.update({'title': record.title.value, 'note': record.note.value})
-
 
         '''
         self.data['title'] = record.title.value
