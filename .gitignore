@@ -11,7 +11,8 @@ data.bin
 contacts.bak
 contacts.dat
 contacts.dir
-
+garbage
+test
 # Distribution / packaging
 .Python
 env/

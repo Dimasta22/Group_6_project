@@ -1,5 +1,6 @@
 import handler_address_book
 from parser import parser, parser_notebook
+from sort import sort
 
 
 def main():
@@ -22,15 +23,25 @@ def main():
                 if parser_notebook(command) in ['exit', 'close', 'good bye']:
                     print('До новых встреч')
                     break
-                #print(handler_solver.handler(command))
+                # print(handler_solver.handler(command))
             break
 
         elif job == '3':
             # Тут будет сортировка файлов
-            break
+            path = input(
+                'Укажите путь к папке, которую нужно отсортировать: ')
+            if parser(path) in ['exit', 'close', 'good bye']:
+                print('До новых встреч')
+                break
+            # if parser_notebook(command) in ['exit', 'close', 'good bye']:
+            #     print('До новых встреч')
+            #     break
+            print(sort(path))
+            continue
 
         else:
             print('Введите команду из предложеных')
+
 
 if __name__ == "__main__":
     main()
