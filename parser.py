@@ -13,6 +13,7 @@ COMMANDS_ADDRESSBOOK = [
     'show',
     'find',
     'exit',
+    'file',
     'close',
     'good bye'
 ]
