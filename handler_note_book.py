@@ -68,22 +68,25 @@ def handler(sentence):
 
     elif parser_notebook(sentence) == 'change':
         _, command, title, *args = sentence.split(' ')
-        for note in notes:
-            args = ' '.join([word for word in args])
-            if command == 'title':
+        #for note in notes:
+        args = ' '.join([word for word in args])
+        if command == 'title':
+            for note in notes:
                 if note['title'] == title:
                     note['note'] = args
                     return 'Заголовок замене'
-            elif command == 'tag':
-                old_tag, new_tag, *args = args.split(' ')
+        elif command == 'tag':
+            old_tag, new_tag, *args = args.split(' ')
+            for note in notes:
+                print(f'{note}')
                 if note.get('tags', None):
                     for tag in note.get('tags', None):
                         if tag == old_tag:
                             note['tags'].remove(old_tag)
                             note['tags'].append(new_tag)
                             return 'Тег заменен'
-            else:
-                return 'Комманда не верная'
+        else:
+            return 'Комманда не верная'
 
     elif parser_notebook(sentence) == 'add':
         _, title, tag, *args = sentence.split(' ')
@@ -127,6 +130,9 @@ if __name__ == '__main__':
     print(handler(sen))
     print(notes)
     sen = 'create Band'
+    print(handler(sen))
+    print(notes)
+    sen = 'change tag Band nnn lll'
     print(handler(sen))
     print(notes)
 
