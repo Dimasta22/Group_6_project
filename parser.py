@@ -13,10 +13,10 @@ COMMANDS_ADDRESSBOOK = [
     'show',
     'file',
     'find',
-    'exit',
-    'file',
-    'close',
     'remove',
+    'file',
+    'exit',
+    'close',
     'good bye'
 ]
 
@@ -59,6 +59,8 @@ def similar(command, which_list):
         arr = COMMANDS_ADDRESSBOOK
     elif which_list == 'note':
         arr = COMMANDS_NOTEBOOK
+    else:
+        arr = ['Нет подходящей команды']
 
     for i in arr:
         s = difflib.SequenceMatcher(None, i, command)
@@ -66,7 +68,8 @@ def similar(command, which_list):
         if a > word_percents:
             word_percents = a
             final_command = i
-    if final_command == None:
+
+    if final_command is None:
         return 'Ничего похожего не найдено'
     return f'Может вы имели ввиду команду: {final_command}'
 

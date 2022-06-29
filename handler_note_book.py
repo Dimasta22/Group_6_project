@@ -1,5 +1,5 @@
 from solver_note_book import Notebook, Record, Title, Note, Tag
-from parser import parser_notebook
+from parser import parser_notebook, similar
 import pickle
 from error_processing import input_error
 import re
@@ -12,7 +12,6 @@ notes = []
 def handler(sentence):
     if parser_notebook(sentence) == 'create':
         _, name, *text = sentence.split(' ')
-        print(text)
         title = Title(name)
         note = Note(" ".join([word for word in text]))
         if not text:
@@ -45,37 +44,44 @@ def handler(sentence):
         _, *text = sentence.split(' ')
         text = ' '.join([word for word in text])
         output_list = []
+        output_str = ''
         for note in notes:
             for value in note.values():
                 if re.findall(fr'{text}', f'{value}'):
                     output_list.append(note)
                     break
-        return output_list
+
+        for note in output_list:
+            if note.get('tags', None):
+                output_str += '{0}: {1}; {2}.\n'.format(note['title'], note['note'], ', '.join(note['tags']))
+            else:
+                output_str += '{0}: {1}.\n'.format(note['title'], note['note'])
+        return output_str[:-1]
 
     elif parser_notebook(sentence) == 'remove':
         _, title, *args = sentence.split(' ')
         for note in notes:
             if note['title'] == title:
                 notes.remove(note)
-        return 'Удалено успешно'
+                return 'Удалено успешно'
+        return 'Такой заметки нет'
 
     elif parser_notebook(sentence) == 'change':
         _, command, title, *args = sentence.split(' ')
-
         for note in notes:
             args = ' '.join([word for word in args])
             if command == 'title':
                 if note['title'] == title:
                     note['note'] = args
+                    return 'Заголовок замене'
             elif command == 'tag':
                 old_tag, new_tag, *args = args.split(' ')
-                #print(f'{old_tag} {new_tag}')
                 if note.get('tags', None):
                     for tag in note.get('tags', None):
                         if tag == old_tag:
                             note['tags'].remove(old_tag)
                             note['tags'].append(new_tag)
-                            break
+                            return 'Тег заменен'
             else:
                 return 'Комманда не верная'
 
@@ -87,7 +93,6 @@ def handler(sentence):
                     note['tags'].append(tag)
                 else:
                     note.update({'tags': [tag]})
-
         return 'Тэг добавлен'
 
     elif parser_notebook(sentence) == 'sort':
@@ -108,7 +113,7 @@ def handler(sentence):
         return output[:-1]
 
     else:
-        return 'Введите команду из списка комманд'
+        return similar(sentence, 'note')
 
 
 if __name__ == '__main__':

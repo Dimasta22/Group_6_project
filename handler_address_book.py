@@ -146,7 +146,6 @@ def handler(sentence):
                         str_ += " : " + str(str2) + ' '
                     else:
                         str_ += ''
-                    # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
                 except AttributeError:
                     str_ += str(value.name.value) + " : " + \
                         str(value.phones) + ' '
@@ -170,7 +169,7 @@ def handler(sentence):
                     for address in value.addresses:
                         str2 += address.value + ' '
                     if str2 != '':
-                        str_ += 'адреса: ' + str(str2) + '\n'
+                        str_ += 'addresses: ' + str(str2) + '\n'
                     else:
                         str_ += '\n'
                 except:
@@ -181,7 +180,6 @@ def handler(sentence):
     elif parser(sentence) == 'file':
         _, flag, *args = sentence.split(' ')
         if flag == 'write':
-            # сохраняем нашу книгу контактов
             try:
                 os.remove('contacts.dir')
                 os.remove('contacts.dat')
@@ -191,7 +189,6 @@ def handler(sentence):
             CONTACTS.write()
             return 'Книга контактов сохранена'
         elif flag == 'read':
-            # загружаем книгу контактов
             contacts_in_str = CONTACTS.read()
             if contacts_in_str[0] == '':
                 return 'Файл пустой'
@@ -218,6 +215,12 @@ def handler(sentence):
                 for phone in value.phones:
                     if find_it in phone.value:
                         flag = 1
+                for email in value.emails:
+                    if find_it in email.value:
+                        flag = 1
+                for addres in value.addresses:
+                    if find_it in addres.value:
+                        flag = 1
                 try:
                     if find_it in value.birthday.value.strftime('%d.%m.%Y'):
                         flag = 1
@@ -233,7 +236,6 @@ def handler(sentence):
                             str_ += " : " + str(str2) + ' '
                         else:
                             str_ += ''
-                        # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
                     except AttributeError:
                         str_ += str(value.name.value) + " : " + \
                             str(value.phones) + ' '
@@ -257,7 +259,7 @@ def handler(sentence):
                         for address in value.addresses:
                             str2 += address.value + ' '
                         if str2 != '':
-                            str_ += 'адреса: ' + str(str2) + '\n'
+                            str_ += 'addresses: ' + str(str2) + '\n'
                         else:
                             str_ += '\n'
                     except:
