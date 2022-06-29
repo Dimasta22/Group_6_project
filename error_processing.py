@@ -3,16 +3,16 @@ def input_error(func):
         try:
             result = func(sentence)
         except IndexError:
-            return "Вы ввели не полные данные"
+            return "Incomplete data entered"
         except TypeError:
-            return "Вы ввели что-то лишнее"
+            return "Added something extra"
         except KeyError:
-            return "Вы ввели не полные данные. Попробуйте снова"
+            return "Incomplete data entered"
         except StopIteration:
-            return "Столько контактов нет"
+            return "Contact limit exceeded"
         except ValueError:
-            return 'Вы ввели неверные данные'
+            return 'Invalid data entered'
         except AttributeError:
-            return 'Это не номер'
+            return 'The entered data does not meet the requirements'
         return result
     return inner

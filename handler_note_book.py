@@ -15,11 +15,11 @@ def handler(sentence):
         title = Title(name)
         note = Note(" ".join([word for word in text]))
         if not text:
-            return 'Введите запись'
+            return 'Enter entry'
         record = Record(title, note)
         all_notes.add_record(record)
         notes.append(all_notes.copy())
-        return 'Запись добавлена'
+        return 'Entry added'
 
     elif parser_notebook(sentence) == 'file':
         _, what, *text = sentence.split(' ')
@@ -28,17 +28,17 @@ def handler(sentence):
         if what == 'write':
             with open(file_name, "wb") as fh:
                 pickle.dump(notes, fh)
-            return 'Запись прошла успешно'
+            return 'Registration was successful'
         elif what == 'read':
             try:
                 with open(file_name, "rb") as fh:
                     file_notes = pickle.load(fh)
                     notes.extend(file_notes)
-                return 'База данных успешно загружена'
+                return 'Database loaded successfully'
             except:
-                return 'Файл не создан'
+                return 'File not created'
         else:
-            return 'Выберите или read или write'
+            return 'Choose either read or write'
 
     elif parser_notebook(sentence) == 'find':
         _, *text = sentence.split(' ')
@@ -63,18 +63,17 @@ def handler(sentence):
         for note in notes:
             if note['title'] == title:
                 notes.remove(note)
-                return 'Удалено успешно'
-        return 'Такой заметки нет'
+                return 'Deleted successfully'
+        return 'There is no such note'
 
     elif parser_notebook(sentence) == 'change':
         _, command, title, *args = sentence.split(' ')
-        #for note in notes:
         args = ' '.join([word for word in args])
         if command == 'title':
             for note in notes:
                 if note['title'] == title:
                     note['note'] = args
-                    return 'Заголовок замене'
+                    return 'Title replacement'
         elif command == 'tag':
             old_tag, new_tag, *args = args.split(' ')
             for note in notes:
@@ -84,9 +83,9 @@ def handler(sentence):
                         if tag == old_tag:
                             note['tags'].remove(old_tag)
                             note['tags'].append(new_tag)
-                            return 'Тег заменен'
+                            return 'Tag replaced'
         else:
-            return 'Комманда не верная'
+            return 'The command is invalid'
 
     elif parser_notebook(sentence) == 'add':
         _, title, tag, *args = sentence.split(' ')
@@ -96,13 +95,19 @@ def handler(sentence):
                     note['tags'].append(tag)
                 else:
                     note.update({'tags': [tag]})
-        return 'Тэг добавлен'
+        return 'Tag added'
 
     elif parser_notebook(sentence) == 'sort':
         _, title, *args = sentence.split(' ')
+        output_str = ''
         for note in notes:
             if note['title'] == title:
                 note['tags'] = sorted(note['tags'])
+            if note.get('tags', None):
+                output_str += '{0}: {1}; {2}.\n'.format(note['title'], note['note'], ', '.join(note['tags']))
+            else:
+                output_str += '{0}: {1}.\n'.format(note['title'], note['note'])
+        return output_str[:-1]
 
     elif parser_notebook(sentence) == 'show':
         _, *args = sentence.split(' ')

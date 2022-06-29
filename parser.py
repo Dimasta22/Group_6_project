@@ -4,11 +4,18 @@ import difflib
 COMMANDS_ADDRESSBOOK = [
     'hello',
     'create',
-    'add',
+    'add phone',
+    'add email',
+    'add address',
+    'add birthday',
     'show all',
-    'change',
+    'change phone',
+    'change email',
+    'change address',
     'phone',
-    'delete',
+    'delete phone',
+    'delete email',
+    'delete address',
     'birthday',
     'show',
     'file',
@@ -60,7 +67,7 @@ def similar(command, which_list):
     elif which_list == 'note':
         arr = COMMANDS_NOTEBOOK
     else:
-        arr = ['Нет подходящей команды']
+        arr = ['No matching team']
 
     for i in arr:
         s = difflib.SequenceMatcher(None, i, command)
@@ -70,8 +77,8 @@ def similar(command, which_list):
             final_command = i
 
     if final_command is None:
-        return 'Ничего похожего не найдено'
-    return f'Может вы имели ввиду команду: {final_command}'
+        return 'Nothing similar found'
+    return f'Maybe you mean command: {final_command}'
 
 
 if __name__ == '__main__':

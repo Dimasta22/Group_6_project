@@ -32,7 +32,7 @@ def create_contact(sentence):
             address = Address(arg.replace('_', ' '))
             addresses.append(address)
         else:
-            return f'{arg} не подходит по формату'
+            return f'{arg} does not fit the format'
     record = Record(name, phone, birthday, email)
     CONTACTS.add_record(record)
     for phone in phones:
@@ -41,13 +41,13 @@ def create_contact(sentence):
         CONTACTS[name.value].add_email(email)
     for address in addresses:
         CONTACTS[name.value].add_address(address)
-    return 'Пользователь добавлен'
+    return 'User added'
 
 
 @input_error
 def handler(sentence):
     if parser(sentence) == 'hello':
-        return "Как я могу Вам помочь?"
+        return "How can I help you?"
 
     elif parser(sentence) == 'create':
         sentence = sentence.split(' ')
@@ -55,65 +55,147 @@ def handler(sentence):
         sentence = ' '.join(sentence)
         return create_contact(sentence)
 
-    elif parser(sentence) == 'add':
-        _, name, phone, *args = sentence.split(' ')
+    elif parser(sentence) == 'add phone':
+        _, _, name, phone, *args = sentence.split(' ')
         phone = Phone(phone)
         for k, v in CONTACTS.items():
             if k == name:
                 if CONTACTS[k].add_phone(phone):
-                    return "Номер добавлен"
+                    return "Number added"
                 else:
-                    return "Такой номер уже есть"
-        return "Такого пользователя нет, чтобы добавить ему"
+                    return "This number already exists."
+        return "There is no such user"
 
-    elif parser(sentence) == 'change':
-        _, name, old_phone, new_phone, *args = sentence.split(' ')
+    elif parser(sentence) == 'add email':
+        _, _, name, email, *args = sentence.split(' ')
+        email = Email(email)
+        for key, value in CONTACTS.items():
+            if key == name:
+                if CONTACTS[key].add_email(email):
+                    return "Added email"
+                else:
+                    return "This email is already created"
+        return "There is no such user"
+
+    elif parser(sentence) == 'add address':
+        _, _, name, address, *args = sentence.split(' ')
+        address = Address(address)
+        for key, value in CONTACTS.items():
+            if key == name:
+                if CONTACTS[key].add_address(address):
+                    return "Added address"
+                else:
+                    return "This address is already created"
+        return "There is no such user"
+
+    elif parser(sentence) == 'add birthday':
+        _, _, name, birthday, *args = sentence.split(' ')
+        birthday = Birthday(birthday)
+        for key, value in CONTACTS.items():
+            if key == name:
+                if CONTACTS[name].add_birthday(birthday):
+                    return "Added birthday"
+                else:
+                    return "This birthday is already created"
+        return "There is no such user"
+
+    elif parser(sentence) == 'change phone':
+        _, _, name, old_phone, new_phone, *args = sentence.split(' ')
         name = Name(name)
         old_phone = Phone(old_phone)
         new_phone = Phone(new_phone)
         for key in CONTACTS:
             if key == name.value:
                 if CONTACTS[key].change_phone(old_phone, new_phone):
-                    return "Номер изменен"
+                    return "Number changed"
                 else:
-                    return "Такого номера нет"
-                # CONTACTS[key].change_phone(old_phone, new_phone)
-        return "Такого пользователя не найдено"
+                    return "No such number"
+        return "No such user found"
 
-    elif parser(sentence) == 'delete':
-        _, name, phone_to_delete, *args = sentence.split(' ')
+    elif parser(sentence) == 'change email':
+        _, _, name, old_email, new_email, *args = sentence.split(' ')
+        name = Name(name)
+        old_email = Email(old_email)
+        new_email = Email(new_email)
+        for key in CONTACTS:
+            if key == name.value:
+                if CONTACTS[key].change_email(old_email, new_email):
+                    return "Email is changed"
+                else:
+                    return "No such email"
+        return "No such user found"
+
+    elif parser(sentence) == 'change address':
+        _, _, name, old_address, new_address, *args = sentence.split(' ')
+        name = Name(name)
+        old_address = Address(old_address)
+        new_address = Address(new_address)
+        for key in CONTACTS:
+            if key == name.value:
+                if CONTACTS[key].change_address(old_address, new_address):
+                    return "Address is changed"
+                else:
+                    return "No such address"
+        return "No such user found"
+
+    elif parser(sentence) == 'delete phone':
+        _, _, name, phone_to_delete, *args = sentence.split(' ')
         name = Name(name)
         phone_to_delete = Phone(phone_to_delete)
         for key in CONTACTS:
             if key == name.value:
-                if CONTACTS[key].delete(phone_to_delete):
-                    return "Номер удален"
+                if CONTACTS[key].delete_phone(phone_to_delete):
+                    return "Number removed"
                 else:
-                    return "Такого номера нет"
-        return "Такого пользователя или номера не найдено"
+                    return "No such number"
+        return "No such user found"
+
+    elif parser(sentence) == 'delete email':
+        _, _, name, email_to_delete, *args = sentence.split(' ')
+        name = Name(name)
+        email_to_delete = Email(email_to_delete)
+        for key in CONTACTS:
+            if key == name.value:
+                if CONTACTS[key].delete_email(email_to_delete):
+                    return "Email deleted"
+                else:
+                    return "No such email"
+        return "No such user found"
+
+    elif parser(sentence) == 'delete address':
+        _, _, name, address_to_delete, *args = sentence.split(' ')
+        name = Name(name)
+        address_to_delete = Address(address_to_delete)
+        for key in CONTACTS:
+            if key == name.value:
+                if CONTACTS[key].delete_address(address_to_delete):
+                    return "Address deleted"
+                else:
+                    return "No such address"
+        return "No such user found"
 
     elif parser(sentence) == 'phone':
         _, name, *args = sentence.split(' ')
         if CONTACTS == {}:
-            return "Список пустой"
+            return "List is empty"
         else:
             for key in CONTACTS:
                 if key == name:
-                    return f"Номерa {key} : {CONTACTS[key].phones_in_str()}"
-            return "Такого контакта не найдено"
+                    return f"Numbers {key} : {CONTACTS[key].phones_in_str()}"
+            return "No such contact found"
 
     elif parser(sentence) == 'birthday':
         _, name, *args = sentence.split(' ')
         if CONTACTS == {}:
-            return "Список пустой"
+            return "List is empty"
         else:
             for key in CONTACTS:
                 if key == name:
                     try:
-                        return f"Дней до дня рождения {key} : {CONTACTS[key].days_to_birthday()}"
+                        return f"Days to birthday {key} : {CONTACTS[key].days_to_birthday()}"
                     except:
-                        return "У этого пользователя не указан день рождения"
-            return "Такого контакта не найдено"
+                        return "This user does not have a birthday"
+            return "No such user found"
 
     elif parser(sentence) == 'show':
         _, number, *args = sentence.split(' ')
@@ -121,7 +203,7 @@ def handler(sentence):
         amount = int(number)
         border = 0
         if CONTACTS == {}:
-            return "Список пустой"
+            return "List is empty"
         else:
             while True:
                 if amount != border:
@@ -134,16 +216,16 @@ def handler(sentence):
     elif parser(sentence) == 'show all':
         str_ = ''
         if CONTACTS == {}:
-            return "Список пустой"
+            return "List is empty"
         else:
             for key, value in CONTACTS.items():
                 try:
                     str2 = ''
-                    str_ += str(value.name.value)+' '
+                    str_ += str(value.name.value) + ' '
                     for phone in value.phones:
-                        str2 += phone.value + ' '
+                        str2 += phone.value + ', '
                     if str2 != '':
-                        str_ += " : " + str(str2) + ' '
+                        str_ += ": phones: " + str(str2[:-2]) + '; '
                     else:
                         str_ += ''
                 except AttributeError:
@@ -151,15 +233,15 @@ def handler(sentence):
                         str(value.phones) + ' '
                 try:
                     str_ += 'birthday: ' + \
-                        value.birthday.value.strftime('%d.%m.%Y') + ' '
+                        value.birthday.value.strftime('%d.%m.%Y') + '; '
                 except:
                     str_ += ' '
                 try:
                     str2 = ''
                     for email in value.emails:
-                        str2 += email.value + ' '
+                        str2 += email.value + ', '
                     if str2 != '':
-                        str_ += 'email: ' + str(str2) + ' '
+                        str_ += 'emails: ' + str(str2[:-2]) + '; '
                     else:
                         str_ += ' '
                 except:
@@ -167,9 +249,9 @@ def handler(sentence):
                 try:
                     str2 = ''
                     for address in value.addresses:
-                        str2 += address.value + ' '
+                        str2 += address.value + ', '
                     if str2 != '':
-                        str_ += 'addresses: ' + str(str2) + '\n'
+                        str_ += 'addresses: ' + str(str2[:-2]) + '.\n'
                     else:
                         str_ += '\n'
                 except:
@@ -187,28 +269,30 @@ def handler(sentence):
             except:
                 pass
             CONTACTS.write()
-            return 'Книга контактов сохранена'
+            return 'Contact book saved'
         elif flag == 'read':
             contacts_in_str = CONTACTS.read()
             if contacts_in_str[0] == '':
-                return 'Файл пустой'
+                return 'File is empty'
             for contact in contacts_in_str:
                 create_contact(contact)
-            return 'Книга контактов загружена'
+            return 'Contact book loaded'
+
     elif parser(sentence) == 'remove':
         _, key, *args = sentence.split(' ')
         try:
             CONTACTS.pop(key)
         except:
-            return 'Такого контакта нет в адресной книге'
-        return f'Контакт {key} удален из адресной книги'
+            return 'This contact is not in the address book'
+        return f'Contact {key} removed from address book'
+
     elif parser(sentence) == 'find':
         _, find_it, *args = sentence.split(' ')
         if find_it == ' ':
-            return 'Введите данные для поиска'
+            return 'Enter data to search'
         str_ = ''
         if CONTACTS == {}:
-            return "Список пустой"
+            return "List is empty"
         else:
             for key, value in CONTACTS.items():
                 flag = 0
@@ -218,8 +302,8 @@ def handler(sentence):
                 for email in value.emails:
                     if find_it in email.value:
                         flag = 1
-                for addres in value.addresses:
-                    if find_it in addres.value:
+                for address in value.addresses:
+                    if find_it in address.value:
                         flag = 1
                 try:
                     if find_it in value.birthday.value.strftime('%d.%m.%Y'):
