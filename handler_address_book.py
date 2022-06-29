@@ -193,6 +193,8 @@ def handler(sentence):
         elif flag == 'read':
             # загружаем книгу контактов
             contacts_in_str = CONTACTS.read()
+            if contacts_in_str[0] == '':
+                return 'Файл пустой'
             for contact in contacts_in_str:
                 create_contact(contact)
             return 'Книга контактов загружена'
