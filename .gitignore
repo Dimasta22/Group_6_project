@@ -13,6 +13,7 @@ contacts.dat
 contacts.dir
 garbage
 test
+smart_command_finder.py
 # Distribution / packaging
 .Python
 env/

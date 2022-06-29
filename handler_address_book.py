@@ -1,6 +1,6 @@
 from error_processing import input_error
 from solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
-from parser import parser
+from parser import parser, similar
 import re
 import os
 
@@ -265,9 +265,8 @@ def handler(sentence):
                         continue
 
         return str_[:-1]
-
-    elif parser(sentence) is None:
-        return 'Введите команду из списка доступных команд!'
+    else:
+        return similar(sentence, 'address')
 
 
 if __name__ == '__main__':

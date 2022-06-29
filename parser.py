@@ -1,5 +1,5 @@
 import re
-
+import difflib
 
 COMMANDS_ADDRESSBOOK = [
     'hello',
@@ -16,6 +16,7 @@ COMMANDS_ADDRESSBOOK = [
     'exit',
     'file',
     'close',
+    'remove',
     'good bye'
 ]
 
@@ -49,6 +50,25 @@ def parser_notebook(sentence):
         func = re.search(fr'^{key}\b', sentence)
         if func is not None:
             return func.group()
+
+
+def similar(command, which_list):
+    final_command = None
+    word_percents = 0
+    if which_list == 'address':
+        arr = COMMANDS_ADDRESSBOOK
+    elif which_list == 'note':
+        arr = COMMANDS_NOTEBOOK
+
+    for i in arr:
+        s = difflib.SequenceMatcher(None, i, command)
+        a = s.ratio()
+        if a > word_percents:
+            word_percents = a
+            final_command = i
+    if final_command == None:
+        return 'Ничего похожего не найдено'
+    return f'Может вы имели ввиду команду: {final_command}'
 
 
 if __name__ == '__main__':
