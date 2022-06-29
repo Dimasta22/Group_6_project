@@ -11,19 +11,27 @@ COMMANDS_ADDRESSBOOK = [
     'delete',
     'birthday',
     'show',
+    'file',
     'find',
     'exit',
+    'file',
     'close',
     'good bye'
 ]
 
 COMMANDS_NOTEBOOK = [
-    # Тут будут команды для работы с записником
-]
-
-COMMANDS_JOB = [
-    'addressbook',
-    'notebook'
+    'create',
+    'add',
+    'change',
+    'delete',
+    'sort',
+    'find',
+    'file',
+    'remove',
+    'show',
+    'exit',
+    'close',
+    'good bye'
 ]
 
 
@@ -35,20 +43,14 @@ def parser(sentence):
             return func.group()
 
 
-def parser_job(sentence):
+def parser_notebook(sentence):
     sentence = sentence.lower().strip()
-    for key in COMMANDS_JOB:
+    for key in COMMANDS_NOTEBOOK:
         func = re.search(fr'^{key}\b', sentence)
         if func is not None:
             return func.group()
 
 
-def arg(sentence):
-     _, name, old_phone, new_phone, *args = sentence.split(' ')
-     return args
-
-
 if __name__ == '__main__':
     sen = 'show Dima 167 050 789 87joi odi'
     print(parser(sen))
-    print(arg(sen))

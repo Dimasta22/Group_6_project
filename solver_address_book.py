@@ -2,6 +2,8 @@ from datetime import datetime
 from error_processing import input_error
 from collections import UserDict
 from itertools import islice
+import shelve
+import re
 
 
 class Field:
@@ -12,6 +14,42 @@ class Field:
 class Name(Field):
     def __init__(self, value) -> None:
         super().__init__(value)
+
+
+class Email(Field):
+    def __init__(self, value) -> None:
+        super().__init__(value)
+        self.__value = None
+        self.value = value
+
+    @property
+    def value(self) -> str:
+        return self.__value
+
+    @value.setter
+    def value(self, value: str):
+        is_email = re.search(
+            r"[a-zA-Z][a-zA-Z0-9_.]{1,}@\w+[.][a-z]{2,}", value)
+        if is_email == None or len(value) != is_email.end():
+            raise ValueError("Не верный формат для email")
+        self.__value = value
+
+
+class Address(Field):
+    def __init__(self, value) -> None:
+        super().__init__(value)
+        self.__value = None
+        self.value = value
+
+    @property
+    def value(self) -> str:
+        return self.__value
+
+    @value.setter
+    def value(self, value: str):
+        if re.match(r"[a-zA-Zа-яА-ЯёЁЇїІіЄєҐґ_]{2,}\.[a-zA-Zа-яА-Я ёЁЇїІіЄєҐґ_]{2,}\/[0-9a-zA-Zа-яА-Я \/ёЁЇїІіЄєҐґ_]{0,100}", value) is None:
+            raise ValueError("Не верный формат для адреса")
+        self.__value = value
 
 
 @ input_error
@@ -55,12 +93,18 @@ class Birthday(Field):
 
 
 class Record:
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None):
+    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None):
         self.name = name
         self.phones = []
         self.birthday = birthday
+        self.addresses = []
+        self.emails = []
         if phone:
             self.add_phone(phone)
+        elif email:
+            self.add_email(email)
+        elif address:
+            self.add_address(address)
 
     def days_to_birthday(self):
         today = datetime.now()
@@ -96,10 +140,34 @@ class Record:
             return True
         return False
 
+    def add_email(self, email) -> bool:
+        if email.value not in [p.value for p in self.emails]:
+            self.emails.append(email)
+            return True
+        return False
+
+    def add_address(self, address) -> bool:
+        if address.value not in [p.value for p in self.addresses]:
+            self.addresses.append(address)
+            return True
+        return False
+
     def phones_in_str(self):
         str_ = ''
         for p in self.phones:
             str_ += str(p.value)+' '
+        return str_[:-1]
+
+    def emails_in_str(self):
+        str_ = ''
+        for email in self.emails:
+            str_ += str(email.value)+' '
+        return str_[:-1]
+
+    def addresses_in_str(self):
+        str_ = ''
+        for address in self.addresses:
+            str_ += str(address.value)+' '
         return str_[:-1]
 
 
@@ -123,13 +191,53 @@ class AddressBook(UserDict):
             str_ += self.data[keys_data[self.current_amount]
                               ].phones_in_str()
             try:
-                str_ += ', день рождения: '+self.data[keys_data[self.current_amount]
-                                                      ].birthday.value.strftime('%d/%m/%Y')+'\n'
+                str_ += ', день рождения: ' + self.data[keys_data[self.current_amount]
+                                                        ].birthday.value.strftime('%d.%m.%Y')+', '
+            except:
+                str_ += ' '
+            try:
+                str_ += 'email: ' + self.data[keys_data[self.current_amount]
+                                              ].emails_in_str() + ', '
+            except:
+                str_ += ' '
+            try:
+                str_ += 'адреса: ' + self.data[keys_data[self.current_amount]
+                                               ].addresses_in_str() + '\n'
             except:
                 str_ += '\n'
             self.current_amount += 1
             return str_[:-1]
         raise StopIteration
+
+    def write(self):
+        # запись
+        with shelve.open(self.filename) as states:
+            for k, v in self.data.items():
+                self.save_str += k + ','
+                if v.phones:
+                    for p in v.phones:
+                        self.save_str += p.value + ','
+                if v.emails:
+                    for email in v.emails:
+                        self.save_str += email.value + ','
+                if v.addresses:
+                    for address in v.addresses:
+                        self.save_str += address.value + ','
+                try:
+                    self.save_str += v.birthday.value.strftime('%d.%m.%Y')+','
+                except:
+                    self.save_str += ''
+                states[k] = self.save_str[:-1]
+                self.save_str = ''
+
+    def read(self):
+        all_contacts_from_file = ''
+        # чтение
+        with shelve.open(self.filename, flag='r') as states:
+            for key in states:
+                all_contacts_from_file += states[key].replace(
+                    ',', ' ')+'\n'
+            return(all_contacts_from_file[:-1].split('\n'))
 
 
 if __name__ == '__main__':

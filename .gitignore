@@ -4,10 +4,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+test.py
 # C extensions
 *.so
-
+data.bin
+contacts.bak
+contacts.dat
+contacts.dir
+garbage
+test
 # Distribution / packaging
 .Python
 env/

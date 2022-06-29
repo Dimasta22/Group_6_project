@@ -1,9 +1,47 @@
 from error_processing import input_error
-from solver_address_book import AddressBook, Name, Phone, Record, Birthday
+from solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
 from parser import parser
-
+import re
+import os
 
 CONTACTS = AddressBook()
+
+
+def create_contact(sentence):
+    name, *args = sentence.split(' ')
+    name = Name(name)
+    phone = None
+    phones = []
+    birthday = None
+    email = None
+    emails = []
+    addresses = []
+    address = None
+    re_birthday = '\d{2}\.\d{2}\.\d{4}'
+    re_address = '[a-zA-Zа-яА-ЯёЁЇїІіЄєҐґ_]{2,}\.[a-zA-Zа-яА-Я ёЁЇїІіЄєҐґ_]{2,}\/[0-9a-zA-Zа-яА-Я \/ёЁЇїІіЄєҐґ_]{0,100}'
+    for arg in args:
+        if re.match(r"\d{12}|\d{10}|\d{3}", arg) is not None:
+            phone = Phone(arg)
+            phones.append(phone)
+        elif re.match(r"[a-zA-Z][a-zA-Z0-9_.]{1,}@\w+[.][a-z]{2,}", arg) is not None:
+            email = Email(arg)
+            emails.append(email)
+        elif re.match(re_birthday, arg) is not None:
+            birthday = Birthday(arg)
+        elif re.match(re_address, arg) is not None:
+            address = Address(arg.replace('_', ' '))
+            addresses.append(address)
+        else:
+            return f'{arg} не подходит по формату'
+    record = Record(name, phone, birthday, email)
+    CONTACTS.add_record(record)
+    for phone in phones:
+        CONTACTS[name.value].add_phone(phone)
+    for email in emails:
+        CONTACTS[name.value].add_email(email)
+    for address in addresses:
+        CONTACTS[name.value].add_address(address)
+    return 'Пользователь добавлен'
 
 
 @input_error
@@ -12,21 +50,10 @@ def handler(sentence):
         return "Как я могу Вам помочь?"
 
     elif parser(sentence) == 'create':
-        _, name, *args = sentence.split(' ')
-        if len(args) == 1:
-            number = args[0]
-            record = Record(Name(name), Phone(number))
-        elif len(args) >= 2:
-            number, date = args[0], args[1]
-            record = Record(Name(name), Phone(number), Birthday(date))
-        else:
-            record = Record(Name(name))
-        for contact in CONTACTS:
-            if contact == name:
-                return 'Такой пользователь уже есть'
-            # CONTACTS[name.value].add_phone(phone)
-        CONTACTS.add_record(record)
-        return 'Пользователь добавлен'
+        sentence = sentence.split(' ')
+        sentence.pop(0)
+        sentence = ' '.join(sentence)
+        return create_contact(sentence)
 
     elif parser(sentence) == 'add':
         _, name, phone, *args = sentence.split(' ')
@@ -37,7 +64,7 @@ def handler(sentence):
                     return "Номер добавлен"
                 else:
                     return "Такой номер уже есть"
-        return "Такого пользователя нет, чтобы добавить ему номер"
+        return "Такого пользователя нет, чтобы добавить ему"
 
     elif parser(sentence) == 'change':
         _, name, old_phone, new_phone, *args = sentence.split(' ')
@@ -50,7 +77,7 @@ def handler(sentence):
                     return "Номер изменен"
                 else:
                     return "Такого номера нет"
-                #CONTACTS[key].change_phone(old_phone, new_phone)
+                # CONTACTS[key].change_phone(old_phone, new_phone)
         return "Такого пользователя не найдено"
 
     elif parser(sentence) == 'delete':
@@ -112,16 +139,40 @@ def handler(sentence):
             for key, value in CONTACTS.items():
                 try:
                     str2 = ''
+                    str_ += str(value.name.value)+' '
                     for phone in value.phones:
                         str2 += phone.value + ' '
-                    str_ += str(value.name.value) + " : " + str(str2) + ' '
+                    if str2 != '':
+                        str_ += " : " + str(str2) + ' '
+                    else:
+                        str_ += ''
                     # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
                 except AttributeError:
                     str_ += str(value.name.value) + " : " + \
                         str(value.phones) + ' '
                 try:
                     str_ += 'birthday: ' + \
-                        value.birthday.value.strftime('%d.%m.%Y') + '\n'
+                        value.birthday.value.strftime('%d.%m.%Y') + ' '
+                except:
+                    str_ += ' '
+                try:
+                    str2 = ''
+                    for email in value.emails:
+                        str2 += email.value + ' '
+                    if str2 != '':
+                        str_ += 'email: ' + str(str2) + ' '
+                    else:
+                        str_ += ' '
+                except:
+                    str_ += ' '
+                try:
+                    str2 = ''
+                    for address in value.addresses:
+                        str2 += address.value + ' '
+                    if str2 != '':
+                        str_ += 'адреса: ' + str(str2) + '\n'
+                    else:
+                        str_ += '\n'
                 except:
                     str_ += '\n'
                     continue
@@ -129,14 +180,36 @@ def handler(sentence):
 
     elif parser(sentence) == 'file':
         _, flag, *args = sentence.split(' ')
-        # Тут будет запись и считывание файла
-
+        if flag == 'write':
+            # сохраняем нашу книгу контактов
+            try:
+                os.remove('contacts.dir')
+                os.remove('contacts.dat')
+                os.remove('contacts.bak')
+            except:
+                pass
+            CONTACTS.write()
+            return 'Книга контактов сохранена'
+        elif flag == 'read':
+            # загружаем книгу контактов
+            contacts_in_str = CONTACTS.read()
+            if contacts_in_str[0] == '':
+                return 'Файл пустой'
+            for contact in contacts_in_str:
+                create_contact(contact)
+            return 'Книга контактов загружена'
+    elif parser(sentence) == 'remove':
+        _, key, *args = sentence.split(' ')
+        try:
+            CONTACTS.pop(key)
+        except:
+            return 'Такого контакта нет в адресной книге'
+        return f'Контакт {key} удален из адресной книги'
     elif parser(sentence) == 'find':
         _, find_it, *args = sentence.split(' ')
         if find_it == ' ':
             return 'Введите данные для поиска'
         str_ = ''
-        flag = 0
         if CONTACTS == {}:
             return "Список пустой"
         else:
@@ -153,15 +226,40 @@ def handler(sentence):
                 if find_it in key or flag == 1:
                     try:
                         str2 = ''
+                        str_ += str(value.name.value)+' '
                         for phone in value.phones:
                             str2 += phone.value + ' '
-                        str_ += str(value.name.value) + " : " + str(str2) + ' '
+                        if str2 != '':
+                            str_ += " : " + str(str2) + ' '
+                        else:
+                            str_ += ''
+                        # Тут попробуй сделать через (f'{}', ).format, везде где str_ и str2
                     except AttributeError:
                         str_ += str(value.name.value) + " : " + \
                             str(value.phones) + ' '
                     try:
                         str_ += 'birthday: ' + \
-                            value.birthday.value.strftime('%d.%m.%Y') + '\n'
+                            value.birthday.value.strftime('%d.%m.%Y') + ' '
+                    except:
+                        str_ += ' '
+                    try:
+                        str2 = ''
+                        for email in value.emails:
+                            str2 += email.value + ' '
+                        if str2 != '':
+                            str_ += 'email: ' + str(str2) + ' '
+                        else:
+                            str_ += ' '
+                    except:
+                        str_ += ' '
+                    try:
+                        str2 = ''
+                        for address in value.addresses:
+                            str2 += address.value + ' '
+                        if str2 != '':
+                            str_ += 'адреса: ' + str(str2) + '\n'
+                        else:
+                            str_ += '\n'
                     except:
                         str_ += '\n'
                         continue
