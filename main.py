@@ -1,4 +1,5 @@
 import handler_address_book
+import handler_note_book
 from parser import parser, parser_notebook
 from sort import sort
 
@@ -23,7 +24,8 @@ def main():
                 if parser_notebook(command) in ['exit', 'close', 'good bye']:
                     print('До новых встреч')
                     break
-                # print(handler_solver.handler(command))
+
+                print(handler_note_book.handler(command))
             break
 
         elif job == '3':

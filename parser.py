@@ -11,6 +11,7 @@ COMMANDS_ADDRESSBOOK = [
     'delete',
     'birthday',
     'show',
+    'file',
     'find',
     'exit',
     'file',
@@ -25,6 +26,9 @@ COMMANDS_NOTEBOOK = [
     'delete',
     'sort',
     'find',
+    'file',
+    'remove',
+    'show',
     'exit',
     'close',
     'good bye'
