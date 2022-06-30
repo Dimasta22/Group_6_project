@@ -31,7 +31,7 @@ class Email(Field):
         is_email = re.search(
             r"[a-zA-Z][a-zA-Z0-9_.]{1,}@\w+[.][a-z]{2,}", value)
         if is_email == None or len(value) != is_email.end():
-            raise ValueError("Не верный формат для email")
+            raise ValueError("Invalid email format")
         self.__value = value
 
 
@@ -48,7 +48,7 @@ class Address(Field):
     @value.setter
     def value(self, value: str):
         if re.match(r"[a-zA-Zа-яА-ЯёЁЇїІіЄєҐґ_]{2,}\.[a-zA-Zа-яА-Я ёЁЇїІіЄєҐґ_]{2,}\/[0-9a-zA-Zа-яА-Я \/ёЁЇїІіЄєҐґ_]{0,100}", value) is None:
-            raise ValueError("Не верный формат для адреса")
+            raise ValueError("Invalid address format")
         self.__value = value
 
 
@@ -121,16 +121,45 @@ class Record:
     def change_phone(self, phone: Phone, new_phone: Phone) -> bool:
         for p in self.phones:
             if phone.value == p.value:
-                self.delete(phone)
+                self.delete_phone(phone)
                 self.add_phone(new_phone)
                 return True
-            return False
+        return False
 
-    def delete(self, phone) -> bool:
+    def change_address(self, address: Address, new_address: Address) -> bool:
+        for p in self.addresses:
+            if address.value == p.value:
+                self.delete_address(address)
+                self.add_address(new_address)
+                return True
+        return False
+
+    def change_email(self, email: Email, new_email: Email) -> bool:
+        for p in self.emails:
+            if email.value == p.value:
+                self.delete_email(email)
+                self.add_email(new_email)
+                return True
+        return False
+
+    def delete_phone(self, phone) -> bool:
         for i, p in enumerate(self.phones):
             if str(p.value) == str(phone.value):
                 self.phones.pop(i)
-                # self.phones[i] = '-'
+                return True
+        return False
+
+    def delete_address(self, address) -> bool:
+        for i, a in enumerate(self.addresses):
+            if str(a.value) == str(address.value):
+                self.addresses.pop(i)
+                return True
+        return False
+
+    def delete_email(self, email) -> bool:
+        for i, e in enumerate(self.emails):
+            if str(e.value) == str(email.value):
+                self.emails.pop(i)
                 return True
         return False
 
@@ -149,6 +178,12 @@ class Record:
     def add_address(self, address) -> bool:
         if address.value not in [p.value for p in self.addresses]:
             self.addresses.append(address)
+            return True
+        return False
+
+    def add_birthday(self, birthday: Birthday) -> bool:
+        if self.birthday is None:
+            self.birthday = birthday
             return True
         return False
 
@@ -186,13 +221,13 @@ class AddressBook(UserDict):
         str_ = ''
         keys_data = list(islice(self.data, None))
         if self.current_amount != len(self.data):
-            str_ += "Контакт " + \
+            str_ += "Contact " + \
                 self.data[keys_data[self.current_amount]].name.value + ' : '
             str_ += self.data[keys_data[self.current_amount]
                               ].phones_in_str()
             try:
-                str_ += ', день рождения: ' + self.data[keys_data[self.current_amount]
-                                                        ].birthday.value.strftime('%d.%m.%Y')+', '
+                str_ += ', birthday: ' + self.data[keys_data[self.current_amount]
+                                                   ].birthday.value.strftime('%d.%m.%Y')+', '
             except:
                 str_ += ' '
             try:
@@ -201,8 +236,8 @@ class AddressBook(UserDict):
             except:
                 str_ += ' '
             try:
-                str_ += 'адреса: ' + self.data[keys_data[self.current_amount]
-                                               ].addresses_in_str() + '\n'
+                str_ += 'address: ' + self.data[keys_data[self.current_amount]
+                                                ].addresses_in_str() + '\n'
             except:
                 str_ += '\n'
             self.current_amount += 1
@@ -210,7 +245,6 @@ class AddressBook(UserDict):
         raise StopIteration
 
     def write(self):
-        # запись
         with shelve.open(self.filename) as states:
             for k, v in self.data.items():
                 self.save_str += k + ','
@@ -232,7 +266,6 @@ class AddressBook(UserDict):
 
     def read(self):
         all_contacts_from_file = ''
-        # чтение
         with shelve.open(self.filename, flag='r') as states:
             for key in states:
                 all_contacts_from_file += states[key].replace(

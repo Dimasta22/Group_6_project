@@ -47,7 +47,7 @@ def is_folder(path: str):
 def sort(folder: str):
     folder = is_folder(folder)
     if folder == False:
-        return 'Не правильно указан путь'
+        return 'Path not correct'
     parser.scan(folder)
     for file in parser.JPEG_IMAGES:
         handle_media(file, folder / 'images' / 'JPEG')
@@ -94,7 +94,7 @@ def sort(folder: str):
         # folder
     for folder in parser.FOLDERS[::-1]:
         handle_folder(folder)
-    return 'Ваша папа отсортирована'
+    return 'Your folder is sorted'
 
 
 if __name__ == "__main__":
