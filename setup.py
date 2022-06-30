@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 
 setup(
-    name='assistant_group_6',
+    name='address_assistant',
     version='1.0.0',
     description='Program for working with address and note books',
     url='https://github.com/Dimasta22/Group_6_project',
@@ -15,5 +15,5 @@ setup(
     ],
     packages=find_namespace_packages(),
     entry_points={'console_scripts': [
-        'assistant_group_6=all_files.main:main']}
+        'address=all_files.main:main']}
 )
