@@ -1,4 +1,3 @@
-from hashlib import new
 import re
 
 CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
