@@ -1,8 +1,10 @@
-from all_files.error_processing import input_error
-from all_files.solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
-from all_files.parser import parser, similar
+from distutils.sysconfig import get_python_lib
+from .error_processing import input_error
+from .solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
+from .parser import parser, similar
 import re
 import os
+
 
 CONTACTS = AddressBook()
 
@@ -290,7 +292,7 @@ def handler(sentence):
 
     elif parser(sentence) == 'help':
         _, *args = sentence.split(' ')
-        file_name = 'addressbook_helper'
+        file_name = os.path.join(get_python_lib(), 'all_files', 'addressbook_helper')
         with open(file_name, 'r') as file:
             text = file.readlines()
             text = ' '.join(text)

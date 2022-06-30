@@ -1,3 +1,4 @@
+from distutils.sysconfig import get_python_lib
 from all_files.solver_note_book import Notebook, Record, Title, Note, Tag
 from all_files.parser import parser_notebook, similar
 import pickle
@@ -43,7 +44,7 @@ def handler(sentence):
 
     elif parser_notebook(sentence) == 'help':
         _, *args = sentence.split(' ')
-        file_name = 'notebook_helper'
+        file_name = os.path.join(get_python_lib(), 'all_files', 'notebook_helper')
         with open(file_name, 'r') as file:
             text = file.readlines()
             text = ' '.join(text)

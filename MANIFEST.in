@@ -1,0 +1,4 @@
+include README.md
+include LICENSE
+include all_files\addressbook_helper
+include all_files\notebook_helper
