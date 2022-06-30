@@ -114,11 +114,11 @@ def handler(sentence):
 
     elif parser(sentence) == 'change email':
         _, _, name, old_email, new_email, *args = sentence.split(' ')
-        name = Name(name)
+        # name = Name(name)
         old_email = Email(old_email)
         new_email = Email(new_email)
         for key in CONTACTS:
-            if key == name.value:
+            if key == name:
                 if CONTACTS[key].change_email(old_email, new_email):
                     return "Email is changed"
                 else:

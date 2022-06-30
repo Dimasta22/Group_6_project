@@ -124,7 +124,7 @@ class Record:
                 self.delete_phone(phone)
                 self.add_phone(new_phone)
                 return True
-            return False
+        return False
 
     def change_address(self, address: Address, new_address: Address) -> bool:
         for p in self.addresses:
@@ -132,7 +132,7 @@ class Record:
                 self.delete_address(address)
                 self.add_address(new_address)
                 return True
-            return False
+        return False
 
     def change_email(self, email: Email, new_email: Email) -> bool:
         for p in self.emails:
@@ -140,7 +140,7 @@ class Record:
                 self.delete_email(email)
                 self.add_email(new_email)
                 return True
-            return False
+        return False
 
     def delete_phone(self, phone) -> bool:
         for i, p in enumerate(self.phones):
@@ -227,7 +227,7 @@ class AddressBook(UserDict):
                               ].phones_in_str()
             try:
                 str_ += ', birthday: ' + self.data[keys_data[self.current_amount]
-                                                        ].birthday.value.strftime('%d.%m.%Y')+', '
+                                                   ].birthday.value.strftime('%d.%m.%Y')+', '
             except:
                 str_ += ' '
             try:
@@ -237,7 +237,7 @@ class AddressBook(UserDict):
                 str_ += ' '
             try:
                 str_ += 'address: ' + self.data[keys_data[self.current_amount]
-                                               ].addresses_in_str() + '\n'
+                                                ].addresses_in_str() + '\n'
             except:
                 str_ += '\n'
             self.current_amount += 1
