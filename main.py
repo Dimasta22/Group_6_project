@@ -10,7 +10,10 @@ def main():
                     'sorting files in a folder (enter: 3), exit (введите: 4): \n>>> ')
 
         if job == '1':
-            handler_address_book.handler('file read')
+            try:
+                handler_address_book.handler('file read')
+            except:
+                pass
             while True:
                 command = input('Enter command name and parameters: ')
                 if parser(command) in ['exit', 'close', 'good bye']:

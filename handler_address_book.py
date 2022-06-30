@@ -277,6 +277,16 @@ def handler(sentence):
             for contact in contacts_in_str:
                 create_contact(contact)
             return 'Contact book loaded'
+    elif parser(sentence) == 'clear':
+        _, *args = sentence.split(' ')
+        CONTACTS.clear()
+        try:
+            os.remove('contacts.dir')
+            os.remove('contacts.dat')
+            os.remove('contacts.bak')
+        except:
+            return 'Files are absent'
+        return 'Contact book cleared'
 
     elif parser(sentence) == 'remove':
         _, key, *args = sentence.split(' ')
