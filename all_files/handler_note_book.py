@@ -1,7 +1,7 @@
-from solver_note_book import Notebook, Record, Title, Note, Tag
-from parser import parser_notebook, similar
+from all_files.solver_note_book import Notebook, Record, Title, Note, Tag
+from all_files.parser import parser_notebook, similar
 import pickle
-from error_processing import input_error
+from all_files.error_processing import input_error
 import re
 import os
 
@@ -140,7 +140,6 @@ def handler(sentence):
                     record.add_tag(Tag(tag))
             output += '{0} \n'.format(str(record))
         return output[:-1]
-
     else:
         return similar(sentence, 'note')
 

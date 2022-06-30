@@ -1,5 +1,4 @@
 from collections import UserDict
-import re
 
 
 class Field:

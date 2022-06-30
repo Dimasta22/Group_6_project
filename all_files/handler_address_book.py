@@ -1,6 +1,6 @@
-from error_processing import input_error
-from solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
-from parser import parser, similar
+from all_files.error_processing import input_error
+from all_files.solver_address_book import AddressBook, Name, Phone, Record, Birthday, Email, Address
+from all_files.parser import parser, similar
 import re
 import os
 
