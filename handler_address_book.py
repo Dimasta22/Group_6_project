@@ -288,6 +288,14 @@ def handler(sentence):
             return 'Files are absent'
         return 'Contact book cleared'
 
+    elif parser(sentence) == 'help':
+        _, *args = sentence.split(' ')
+        file_name = 'addressbook_helper'
+        with open(file_name, 'r') as file:
+            text = file.readlines()
+            text = ' '.join(text)
+        return text
+
     elif parser(sentence) == 'remove':
         _, key, *args = sentence.split(' ')
         try:

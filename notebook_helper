@@ -1,0 +1,30 @@
+Working with the notebook:
+There are options: 'create', 'add', 'change', 'sort', 'find', 'file',
+                   'clear', 'remove', 'show', 'exit', 'close', 'good bye'.
+
+All parameters are entered with a space, example: create some request
+#############################################################################################
+Commands: 'show', 'clear', 'exit', 'close', 'good bye' do not have some options.
+
+The 'create' command creates a new note. Accepts parameters: title and note.
+Example: create Football I like Brazil team
+
+Command: 'add' adding title or tag
+Example: add tag Argentina
+
+Command: 'change' title or tag
+Example: change title Football Sport
+
+Command: 'remove' is removing all note
+Example: remove Football
+
+Command: 'sort' is sorting all tags in note
+Example: sort Football
+
+Command: 'find' is finding all match in note
+Example: find Foot
+
+Command: 'file' write and read addressbook in file. Take a value 'read' or 'write'
+Command: 'clear' delete all notes.
+Command: 'show' show all notes.
+Commands: 'exit', 'close', 'good bye' are completing a project

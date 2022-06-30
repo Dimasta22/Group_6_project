@@ -40,6 +40,15 @@ def handler(sentence):
                 return 'File not created'
         else:
             return 'Choose either read or write'
+
+    elif parser_notebook(sentence) == 'help':
+        _, *args = sentence.split(' ')
+        file_name = 'notebook_helper'
+        with open(file_name, 'r') as file:
+            text = file.readlines()
+            text = ' '.join(text)
+        return text
+
     elif parser_notebook(sentence) == 'clear':
         _, *args = sentence.split(' ')
         all_notes.clear()

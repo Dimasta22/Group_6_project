@@ -7,7 +7,7 @@ from sort import sort
 def main():
     while True:
         job = input('Choose what we work with: addressbook (enter: 1), notebook (enter: 2),\n'
-                    'sorting files in a folder (enter: 3), exit (введите: 4): \n>>> ')
+                    'sorting files in a folder (enter: 3), exit (enter: 4): \n>>> ')
 
         if job == '1':
             try:

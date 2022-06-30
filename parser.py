@@ -22,7 +22,7 @@ COMMANDS_ADDRESSBOOK = [
     'clear',
     'find',
     'remove',
-    'file',
+    'help',
     'exit',
     'close',
     'good bye'
@@ -39,6 +39,7 @@ COMMANDS_NOTEBOOK = [
     'clear',
     'remove',
     'show',
+    'help',
     'exit',
     'close',
     'good bye'
