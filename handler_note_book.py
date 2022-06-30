@@ -3,6 +3,7 @@ from parser import parser_notebook, similar
 import pickle
 from error_processing import input_error
 import re
+import os
 
 all_notes = Notebook()
 notes = []
@@ -39,6 +40,15 @@ def handler(sentence):
                 return 'File not created'
         else:
             return 'Choose either read or write'
+    elif parser_notebook(sentence) == 'clear':
+        _, *args = sentence.split(' ')
+        all_notes.clear()
+        notes.clear()
+        try:
+            os.remove('notebook_data.bin')
+        except:
+            return 'Files are absent'
+        return 'Notebook cleared'
 
     elif parser_notebook(sentence) == 'find':
         _, *text = sentence.split(' ')
@@ -53,7 +63,8 @@ def handler(sentence):
 
         for note in output_list:
             if note.get('tags', None):
-                output_str += '{0}: {1}; {2}.\n'.format(note['title'], note['note'], ', '.join(note['tags']))
+                output_str += '{0}: {1}; {2}.\n'.format(
+                    note['title'], note['note'], ', '.join(note['tags']))
             else:
                 output_str += '{0}: {1}.\n'.format(note['title'], note['note'])
         return output_str[:-1]
@@ -104,7 +115,8 @@ def handler(sentence):
             if note['title'] == title:
                 note['tags'] = sorted(note['tags'])
             if note.get('tags', None):
-                output_str += '{0}: {1}; {2}.\n'.format(note['title'], note['note'], ', '.join(note['tags']))
+                output_str += '{0}: {1}; {2}.\n'.format(
+                    note['title'], note['note'], ', '.join(note['tags']))
             else:
                 output_str += '{0}: {1}.\n'.format(note['title'], note['note'])
         return output_str[:-1]
@@ -140,7 +152,3 @@ if __name__ == '__main__':
     sen = 'change tag Band nnn lll'
     print(handler(sen))
     print(notes)
-
-
-
-
