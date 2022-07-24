@@ -1,7 +1,7 @@
-from all_files.solver_note_book import Notebook, Record, Title, Note, Tag
-from all_files.parser import parser_notebook, similar
+from solver_note_book import Notebook, Record, Title, Note, Tag
+from parser import parser_notebook, similar
 import pickle
-from all_files.error_processing import input_error
+from error_processing import input_error
 import re
 import os
 

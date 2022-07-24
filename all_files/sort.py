@@ -1,8 +1,8 @@
 from pathlib import Path
 import shutil
 import sys
-import all_files.filewalker as parser
-from all_files.normalize import normalize
+import filewalker as parser
+from normalize import normalize
 
 
 def handle_media(filename: Path, target_folder: Path):

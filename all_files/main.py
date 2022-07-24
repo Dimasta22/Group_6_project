@@ -1,7 +1,7 @@
-import all_files.handler_address_book
-import all_files.handler_note_book
-from all_files.parser import parser, parser_notebook
-from all_files.sort import sort
+import handler_address_book
+import handler_note_book
+from parser import parser, parser_notebook
+from sort import sort
 
 
 def main():
@@ -11,27 +11,27 @@ def main():
 
         if job == '1':
             try:
-                all_files.handler_address_book.handler('file read')
+                handler_address_book.handler('file read')
             except:
                 pass
             while True:
                 command = input('Enter command name and parameters: ')
                 if parser(command) in ['exit', 'close', 'good bye']:
                     print('See you in the address book')
-                    all_files.handler_address_book .handler('file write')
+                    handler_address_book .handler('file write')
                     break
-                print(all_files.handler_address_book .handler(command))
+                print(handler_address_book .handler(command))
             continue
 
         elif job == '2':
-            all_files.handler_note_book.handler('file read')
+            handler_note_book.handler('file read')
             while True:
                 command = input('Enter command name and parameters: ')
                 if parser_notebook(command) in ['exit', 'close', 'good bye']:
                     print('See you soon in notes')
-                    all_files.handler_note_book.handler('file write')
+                    handler_note_book.handler('file write')
                     break
-                print(all_files.handler_note_book.handler(command))
+                print(handler_note_book.handler(command))
             continue
 
         elif job == '3':
